@@ -6,24 +6,62 @@ styleSwitcherToggle.addEventListener('click', () => { document.querySelector('.s
 window.addEventListener('scroll', () => { if(document.querySelector('.style-switcher').classList.contains('open')) { document.querySelector('.style-switcher').classList.remove('open'); } })
 
 const alternateStyles = document.querySelectorAll('.alternate-style');
+const THEME_KEY = 'portfolio-theme-color';
+
 function setActiveStyle(color) {
     alternateStyles.forEach((style) => {
-        if(color === style.getAttribute('title')) { style.removeAttribute('disabled'); } else { style.setAttribute('disabled', 'true'); }
-    })
+        if (color === style.getAttribute('title')) {
+            style.removeAttribute('disabled');
+        } else {
+            style.setAttribute('disabled', 'true');
+        }
+    });
+    try { localStorage.setItem(THEME_KEY, color); } catch (e) {}
+}
+
+function applySavedTheme() {
+    try {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved) setActiveStyle(saved);
+    } catch (e) {}
 }
 
 /* Dark/Light Mode */
 
 const dayNight = document.querySelector('.day-night');
+const DARK_KEY = 'portfolio-dark-mode';
+
+function setDayNightIcon(isDark) {
+    const icon = dayNight.querySelector('i');
+    icon.classList.remove('fa-sun', 'fa-moon');
+    icon.classList.add(isDark ? 'fa-sun' : 'fa-moon');
+}
+
+function applyDarkMode(isDark) {
+    if (isDark) {
+        document.body.classList.add('dark');
+    } else {
+        document.body.classList.remove('dark');
+    }
+    setDayNightIcon(isDark);
+    try { localStorage.setItem(DARK_KEY, isDark ? '1' : '0'); } catch (e) {}
+}
+
 dayNight.addEventListener('click', () => {
-    dayNight.querySelector('i').classList.toggle('fa-sun');
-    dayNight.querySelector('i').classList.toggle('fa-moon');
-    document.body.classList.toggle('dark');
-})
+    const isDark = !document.body.classList.contains('dark');
+    applyDarkMode(isDark);
+});
 
 window.addEventListener('load', () => {
-    if(document.body.classList.contains('dark')) { dayNight.querySelector('i').classList.add('fa-sun'); } else { dayNight.querySelector('i').classList.add('fa-moon'); }
-})
+    applySavedTheme();
+    try {
+        const saved = localStorage.getItem(DARK_KEY);
+        const isDark = saved === null ? true : saved === '1';
+        applyDarkMode(isDark);
+    } catch (e) {
+        setDayNightIcon(document.body.classList.contains('dark'));
+    }
+});
 
 /* Typing Animation */
 
@@ -179,6 +217,19 @@ window.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+});
+
+/* Portfolio View More (mobile): expand card to show full content */
+document.querySelectorAll('.portfolio-view-more').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var inner = this.closest('.portfolio-item-inner');
+        if (!inner) return;
+        var isExpanded = inner.classList.toggle('expanded');
+        this.textContent = isExpanded ? 'View Less' : 'View More';
+        this.setAttribute('aria-label', isExpanded ? 'View less' : 'View more');
+    });
 });
 
 /* Portfolio Animations */
