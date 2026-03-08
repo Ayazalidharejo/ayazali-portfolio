@@ -300,14 +300,14 @@ body { line-height: 1.5; font-size: 16px; font-family: 'Poppins', sans-serif; ba
     backface-visibility: hidden;
     transform: translateZ(0);
 }
-/* Hover: sirf card lift + border – neeche wala full text hover par nahi dikhega */
+/* Hover (View More click se pehle): sirf card lift + border – full content NA dikhe */
 @media (hover: hover) {
-    .portfolio .portfolio-item-inner:hover {
+    .portfolio .portfolio-item-inner:not(.expanded):hover {
         transform: translateY(-6px);
         box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
         border-color: var(--skin-color);
     }
-    body.dark .portfolio .portfolio-item-inner:hover {
+    body.dark .portfolio .portfolio-item-inner:not(.expanded):hover {
         box-shadow: 0 12px 28px rgba(236, 24, 57, 0.15);
     }
 }
@@ -518,14 +518,10 @@ body { line-height: 1.5; font-size: 16px; font-family: 'Poppins', sans-serif; ba
     cursor: pointer;
 }
 
-/* Expanded + hover: View Less hamesha dikhe, default pe wapas jane ke liye */
+/* Expanded + hover: content bhi dikhe (title, description, View Project, View Less sab) */
 .portfolio .portfolio-item-inner.expanded:hover .portfolio-content h4,
 .portfolio .portfolio-item-inner.expanded:hover .portfolio-content .portfolio-role,
-.portfolio .portfolio-item-inner.expanded:hover .portfolio-content .portfolio-description {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.25s ease, visibility 0.25s ease;
-}
+.portfolio .portfolio-item-inner.expanded:hover .portfolio-content .portfolio-description,
 .portfolio .portfolio-item-inner.expanded:hover .portfolio-content .portfolio-link,
 .portfolio .portfolio-item-inner.expanded:hover .portfolio-content .portfolio-view-more {
     opacity: 1;
@@ -680,6 +676,49 @@ body { line-height: 1.5; font-size: 16px; font-family: 'Poppins', sans-serif; ba
         color: var(--skin-color);
         background: transparent;
         padding: 0;
+    }
+
+    /* Mobile expanded (View More click): image hide, sirf content show */
+    .portfolio .portfolio-item-inner.expanded {
+        min-height: 0;
+    }
+    .portfolio .portfolio-item-inner.expanded .portfolio-img {
+        display: none;
+    }
+    .portfolio .portfolio-item-inner.expanded .portfolio-content {
+        position: relative;
+        background: var(--bg-black100);
+        padding: 20px;
+        border-radius: 0 0 10px 10px;
+    }
+    .portfolio .portfolio-item-inner.expanded .portfolio-content h4 {
+        color: var(--skin-color);
+        text-shadow: none;
+    }
+    .portfolio .portfolio-item-inner.expanded .portfolio-content .portfolio-role,
+    .portfolio .portfolio-item-inner.expanded .portfolio-content .portfolio-role strong {
+        color: var(--text-black700);
+    }
+    .portfolio .portfolio-item-inner.expanded .portfolio-content .portfolio-role strong {
+        color: var(--text-black900);
+    }
+    .portfolio .portfolio-item-inner.expanded .portfolio-content .portfolio-description {
+        color: var(--text-black700);
+        -webkit-line-clamp: unset;
+        max-height: none;
+    }
+    .portfolio .portfolio-item-inner.expanded .portfolio-content .portfolio-description::after {
+        display: none;
+    }
+    .portfolio .portfolio-item-inner.expanded .portfolio-content .portfolio-link {
+        color: var(--skin-color);
+        background: transparent;
+        padding: 0;
+    }
+    .portfolio .portfolio-item-inner.expanded .portfolio-view-more {
+        background: var(--skin-color);
+        color: #fff;
+        border-color: var(--skin-color);
     }
 }
 
